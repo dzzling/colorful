@@ -37,51 +37,37 @@
 	}
 </script>
 
-{#if screen === 0 || screen === 4}
+{#if screen === 0}
 	<div
 		class="absolute top-0 left-0 w-full h-full p-32 flex items-center justify-center bg-black/30"
 	>
 		<div
-			class="w-full max-w-[480px] h-full border-2 border-black bg-white rounded-md cursor-auto flex flex-col justify-center items-center p-4"
+			class="w-full max-w-[480px] h-full border-2 border-black bg-white rounded-2xl cursor-auto flex flex-col justify-center items-center p-4"
 		>
-			{#if screen === 4}
-				{#if targetColorIndex === selectedColorIndex}
-					<h2 class="text-xl mt-4">Correct!</h2>
-				{:else if targetColorIndex != selectedColorIndex}
-					<h2 class="text-xl mt-4">That was close!</h2>
-				{/if}
-				<div class="my-auto flex justify-center flex-col items-center">
-					<p class="mb-4">This was the color we were looking for:</p>
-					<div
-						class="w-52 h-52 rounded-md"
-						style="background-color: {colors[targetColorIndex]};"
-					></div>
-				</div>
-			{/if}
-
-			{#if screen === 0}
-				<h2 class="text-xl mt-4">Instructions</h2>
-				<p class="mt-8">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque in tellus facilisis,
-					efficitur velit sit amet, commodo neque.<br /> <br /> Proin at est consequat libero
-					pharetra lacinia ut ac nibh. Orci varius natoque penatibus et magnis dis parturient
-					montes, nascetur ridiculus mus. In placerat enim a lectus congue, vitae finibus nisl
-					iaculis. Nec faucibus nisi faucibus sed. Praesent a iaculis magna. <br /> <br /> Pellentesque
-					in tellus facilisis, efficitur velit sit amet, commodo neque. In placerat enim a lectus congue,
-					vitae finibus nisl iaculis. Nullam ullamcorper sagittis magna, nec faucibus nisi faucibus sed.
-					Praesent a iaculis magna. Donec nec volutpat ante. Phasellus eleifend non velit non tempus.
-				</p>
-			{/if}
+			<h2 class="text-xl mt-4">Instructions</h2>
+			<p class="mt-8">Welcome to our color guessing game!</p>
+			<br />
+			<div class=" bg-violet-200 p-1 rounded-lg mb-4 flex flex-row">
+				<p class="px-2">Here is how it works</p>
+				<img src="pin.svg" alt="Icon" width="10%" height="10%" />
+			</div>
+			<ol class="list-decimal px-10">
+				<li>Choose your difficulty level, which you can adjust at any time during the game.</li>
+				<li>
+					When you're ready, push the button to reveal the target color, then describe it to your
+					teammate.
+				</li>
+				<li>Click the button again to hide the target color icon.</li>
+				<li>Your teammate can then log in and select a color.</li>
+				<li>The selected color will be circled green if correct, and red if wrong.</li>
+				<li>Continue to the next round and keep the fun going!</li>
+			</ol>
 
 			<button
-				class="bg-white rounded-md border-black border-2 whitespace-nowrap w-full p-4 mt-auto"
+				class="bg-white rounded-2xl border-black border-2 whitespace-nowrap w-full p-4 mt-auto"
 				on:click={handleNextScreenButtonClick}
 			>
-				{#if screen === 0}
-					<p>I understand</p>
-				{:else if screen === 4}
-					<p>Another round!</p>
-				{/if}
+				<p>Let's go</p>
 			</button>
 		</div>
 	</div>
@@ -96,23 +82,35 @@
 			{#each colors as color, index}
 				<div
 					class={clsx(
-						'w-full rounded-md h-full flex justify-center items-center',
+						'w-full rounded-2xl h-full flex justify-center items-center outline outline-2 outline-black',
 						screen === 3 && 'cursor-pointer',
-						screen === 3 && selectedColorIndex === index && 'ring ring-black'
+						screen === 3 &&
+							selectedColorIndex === index &&
+							'outline-4 outline-black outline-dashed',
+						screen === 2 && targetColorIndex === index && 'outline outline-4 outline-black',
+						screen === 4 && index === selectedColorIndex && 'outline outline-4 outline-black'
 					)}
 					style="background-color: {color};"
 					on:click={() => selectColor(index)}
 				>
 					{#if targetColorIndex === index && screen === 2}
-						<p class="text-2xl">x</p>
+						<img src="screen-normal.svg" alt="Target" width="40%" height="40%" />
+					{/if}
+					{#if screen === 4}
+						{#if targetColorIndex === index}
+							<img src="check-circle.svg" alt="Target" width="40%" height="40%" />
+						{/if}
+						{#if selectedColorIndex === index && selectedColorIndex != targetColorIndex}
+							<img src="x-circle.svg" alt="Selected color" width="40%" height="40%" />
+						{/if}
 					{/if}
 				</div>
 			{/each}
 		</div>
-		<div class="w-full h-full flex flex-col justify-center items-center">
-			{#if screen === 0 || screen === 1 || screen === 2 || (screen === 3 && selectedColorIndex !== undefined)}
+		<div class="w-full h-32 flex flex-col justify-center items-center">
+			{#if screen === 0 || screen === 1 || screen === 2 || (screen === 3 && selectedColorIndex !== undefined) || screen === 4}
 				<button
-					class="w-96 h-24 border-2 rounded-md border-black text-lg"
+					class="w-96 h-24 border-2 rounded-2xl border-black text-lg"
 					on:click={handleNextScreenButtonClick}
 				>
 					{#if screen === 1}
@@ -121,6 +119,11 @@
 						<p class="text-lg">Got it!</p>
 					{:else if screen === 3 && selectedColorIndex !== undefined}
 						<p class="text-lg">Log in</p>
+					{:else if screen === 4}
+						{#if targetColorIndex === selectedColorIndex}
+							<p>Correct. Another round!</p>
+						{:else}
+							<p>Close enough. Another round!</p>{/if}
 					{/if}
 				</button>
 			{/if}
