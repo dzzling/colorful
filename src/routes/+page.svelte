@@ -1,33 +1,22 @@
 <script lang="ts">
+	import { getRandomColors } from '$lib/colors';
+	import { getRandomInt } from '$lib/random';
 	import clsx from 'clsx';
+	import type { ChangeEventHandler } from 'svelte/elements';
 
-	type Color = string;
-
-	function getRandomInt(minParam: number, maxParam: number) {
-		const min = Math.ceil(minParam);
-		const max = Math.floor(maxParam);
-		return Math.floor(Math.random() * (max - min + 1)) + min;
-	}
-
-	function getRandomColors(): Array<Color> {
-		// TODO: Actually randomize this
-		return [
-			'#d0bfff',
-			'#9775fa',
-			'#da77f2',
-			'#be4bdb',
-			'#7950f2',
-			'#fcc2d7',
-			'#1971c2',
-			'#ff8787',
-			'#a5d8ff'
-		];
-	}
-
+	let difficulty = 0;
 	let screen = 0;
-	let colors = getRandomColors();
+	let colors = getRandomColors(1);
 	let targetColorIndex = getRandomInt(0, colors.length - 1);
 	let selectedColorIndex: undefined | number = undefined;
+
+	function reset(newDifficulty: number = difficulty) {
+		screen = 1;
+		difficulty = newDifficulty;
+		colors = getRandomColors(difficulty);
+		targetColorIndex = getRandomInt(0, colors.length - 1);
+		selectedColorIndex = undefined;
+	}
 
 	function handleNextScreenButtonClick() {
 		if (screen === 0) {
@@ -39,9 +28,7 @@
 		} else if (screen === 3) {
 			screen = 4;
 		} else if (screen === 4) {
-			screen = 1;
-			targetColorIndex = getRandomInt(0, colors.length - 1);
-			selectedColorIndex = undefined;
+			reset();
 		}
 	}
 
@@ -141,5 +128,19 @@
 				<p class="text-lg">Please select a color</p>
 			{/if}
 		</div>
+
+		{#if screen === 1}
+			<div class="w-full px-16">
+				<p>Difficulty</p>
+				<input
+					class="w-full"
+					type="range"
+					min={0}
+					max={100}
+					bind:value={difficulty}
+					on:change={(e) => reset(parseInt(e.currentTarget.value))}
+				/>
+			</div>
+		{/if}
 	</div>
 </div>
