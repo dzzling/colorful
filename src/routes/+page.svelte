@@ -3,12 +3,14 @@
 	import { getRandomInt } from '$lib/random';
 	import clsx from 'clsx';
 	import type { ChangeEventHandler } from 'svelte/elements';
+	import Button from '$lib/Button.svelte';
 
 	let difficulty = 0;
 	let screen = 0;
 	let colors = getRandomColors(1);
 	let targetColorIndex = getRandomInt(0, colors.length - 1);
 	let selectedColorIndex: undefined | number = undefined;
+	let buttonContent = 'Click me';
 
 	function reset(newDifficulty: number = difficulty) {
 		screen = 1;
@@ -16,17 +18,25 @@
 		colors = getRandomColors(difficulty);
 		targetColorIndex = getRandomInt(0, colors.length - 1);
 		selectedColorIndex = undefined;
+		buttonContent = 'Show me the target';
 	}
 
 	function handleNextScreenButtonClick() {
 		if (screen === 0) {
 			screen = 1;
+			buttonContent = 'Show me the target';
 		} else if (screen === 1) {
 			screen = 2;
+			buttonContent = 'Got it';
 		} else if (screen === 2) {
 			screen = 3;
 		} else if (screen === 3) {
 			screen = 4;
+			if (targetColorIndex === selectedColorIndex) {
+				buttonContent = 'Correct. Another round!';
+			} else {
+				buttonContent = 'Close enough. Another round!';
+			}
 		} else if (screen === 4) {
 			reset();
 		}
@@ -63,12 +73,7 @@
 				<li>Continue to the next round and keep the fun going!</li>
 			</ol>
 
-			<button
-				class="bg-white rounded-2xl border-black border-2 whitespace-nowrap w-full p-4 mt-auto"
-				on:click={handleNextScreenButtonClick}
-			>
-				<p>Let's go</p>
-			</button>
+			<Button on:next={handleNextScreenButtonClick} buttonText={'Lets go'} />
 		</div>
 	</div>
 {/if}
@@ -112,26 +117,11 @@
 			{/each}
 		</div>
 		<div class="w-full h-32 flex flex-col justify-center items-center">
-			{#if screen === 0 || screen === 1 || screen === 2 || (screen === 3 && selectedColorIndex !== undefined) || screen === 4}
-				<button
-					class="w-96 h-24 border-2 rounded-2xl border-black text-lg"
-					on:click={handleNextScreenButtonClick}
-				>
-					{#if screen === 1}
-						<p class="text-lg">Show me the target</p>
-					{:else if screen === 2}
-						<p class="text-lg">Got it!</p>
-					{:else if screen === 3 && selectedColorIndex !== undefined}
-						<p class="text-lg">Log in</p>
-					{:else if screen === 4}
-						{#if targetColorIndex === selectedColorIndex}
-							<p>Correct. Another round!</p>
-						{:else}
-							<p>Close enough. Another round!</p>{/if}
-					{/if}
-				</button>
-			{/if}
-			{#if screen === 3 && selectedColorIndex === undefined}
+			{#if screen !== 3}
+				<Button on:next={handleNextScreenButtonClick} buttonText={buttonContent} />
+			{:else if screen === 3 && selectedColorIndex !== undefined}
+				<Button on:next={handleNextScreenButtonClick} buttonText={'Log in'} />
+			{:else if screen === 3 && selectedColorIndex === undefined}
 				<p class="text-lg">Please select a color</p>
 			{/if}
 		</div>
