@@ -5,6 +5,7 @@
 	import type { ChangeEventHandler } from 'svelte/elements';
 	import Button from '$lib/Button.svelte';
 	import Modal from '$lib/Modal.svelte';
+	import Tile from '$lib/Tile.svelte';
 
 	let difficulty = 0;
 	let screen = 0;
@@ -46,6 +47,32 @@
 	function selectColor(index: number) {
 		selectedColorIndex = index;
 	}
+
+	function getTileVariantForColorIndex(colorIndex: number) {
+		if (screen === 2 && targetColorIndex === colorIndex) {
+			return 'TARGET';
+		} else if (screen === 3 && selectedColorIndex === colorIndex) {
+			return 'SELECTED';
+		} else if (
+			screen === 4 &&
+			targetColorIndex === selectedColorIndex &&
+			targetColorIndex === colorIndex
+		) {
+			return 'WON';
+		} else if (
+			screen === 4 &&
+			selectedColorIndex !== targetColorIndex &&
+			selectedColorIndex === colorIndex
+		) {
+			return 'LOST_INCORRECT';
+		} else if (
+			screen === 4 &&
+			selectedColorIndex !== targetColorIndex &&
+			targetColorIndex === colorIndex
+		) {
+			return 'LOST_CORRECT';
+		}
+	}
 </script>
 
 {#if screen === 0}
@@ -55,7 +82,6 @@
 		<Modal on:next={handleNextScreenButtonClick} modalButtonText={buttonContent} />
 	</div>
 {/if}
-
 <div class="w-full min-h-screen flex flex-col items-center px-8 bg-black/10">
 	<div
 		class="w-full flex-1 max-w-[640px] flex flex-col items-center justify-evenly bg-white rounded-2xl my-10 border-2 border-black"
@@ -65,31 +91,11 @@
 		</div>
 		<div class="h-96 w-96 grid grid-rows-3 grid-cols-3 gap-4">
 			{#each colors as color, index}
-				<div
-					class={clsx(
-						'w-full rounded-2xl h-full flex justify-center items-center outline outline-2 outline-black',
-						screen === 3 && 'cursor-pointer',
-						screen === 3 &&
-							selectedColorIndex === index &&
-							'outline-4 outline-black outline-dashed',
-						screen === 2 && targetColorIndex === index && 'outline outline-4 outline-black',
-						screen === 4 && index === selectedColorIndex && 'outline outline-4 outline-black'
-					)}
-					style="background-color: {color};"
-					on:click={() => selectColor(index)}
-				>
-					{#if targetColorIndex === index && screen === 2}
-						<img src="screen-normal.svg" alt="Target" width="40%" height="40%" />
-					{/if}
-					{#if screen === 4}
-						{#if targetColorIndex === index}
-							<img src="check-circle.svg" alt="Target" width="40%" height="40%" />
-						{/if}
-						{#if selectedColorIndex === index && selectedColorIndex != targetColorIndex}
-							<img src="x-circle.svg" alt="Selected color" width="40%" height="40%" />
-						{/if}
-					{/if}
-				</div>
+				<Tile
+					tileColor={color}
+					on:select={() => selectColor(index)}
+					variant={getTileVariantForColorIndex(index)}
+				/>
 			{/each}
 		</div>
 		<div class="w-full h-32 flex flex-col justify-center items-center">
