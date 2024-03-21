@@ -6,6 +6,7 @@
 	import Button from '$lib/Button.svelte';
 	import Modal from '$lib/Modal.svelte';
 	import Tile from '$lib/Tile.svelte';
+	import Difficulty from '$lib/Difficulty.svelte';
 
 	let difficulty = 0;
 	let screen = 0;
@@ -109,17 +110,10 @@
 		</div>
 		<div class="h-16 w-full">
 			{#if screen === 1}
-				<div class="w-full px-16">
-					<p>Difficulty</p>
-					<input
-						class="w-full"
-						type="range"
-						min={0}
-						max={100}
-						bind:value={difficulty}
-						on:change={(e) => reset(parseInt(e.currentTarget.value))}
-					/>
-				</div>
+				<Difficulty
+					difficultyIndex={difficulty}
+					on:resetAll={(e) => reset(parseInt(e.currentTarget.value))}
+				/>
 			{/if}
 		</div>
 	</div>
