@@ -17,7 +17,10 @@
 	let targetColorIndex: undefined | number = undefined;
 	let selectedColorIndex: undefined | number = undefined;
 	let roomName: undefined | string = undefined;
+	let userName: undefined | string = undefined;
 	let users: undefined | Array<string> = undefined;
+	let player: undefined | Array<string> = undefined;
+	let playerIndex = 0;
 
 	// Connect to the server
 	const socket = io('http://localhost:3000');
@@ -60,7 +63,13 @@
 		targetColorIndex = received_data[0];
 		colors = received_data[1];
 		difficulty = received_data[2];
+		player = users[playerIndex];
 		handleNextScreenButtonClick();
+	});
+
+	socket.on('username', (username) => {
+		userName = username;
+		console.log(player, userName);
 	});
 
 	// Screen click
@@ -100,6 +109,8 @@
 	function handleNextScreenButtonClick() {
 		if (screen === 4) {
 			reset();
+		} else if (screen === 1 && player === userName) {
+			screen = 3;
 		} else {
 			screen += 1;
 		}
@@ -190,8 +201,10 @@
 			{/each}
 		</div>
 		<div class="w-full h-32 flex flex-col justify-center items-center">
-			{#if screen === 1}
+			{#if screen === 1 && userName != player}
 				<Button on:next={screenClick} buttonText={'Show me the target'} />
+			{:else if screen === 1 && userName === player}
+				<Button on:next={screenClick} buttonText={'Next'} />
 			{:else if screen === 2}
 				<Button on:next={screenClick} buttonText={'Got it'} />
 			{:else if screen === 3 && selectedColorIndex === undefined}
