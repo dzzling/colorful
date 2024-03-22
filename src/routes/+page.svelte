@@ -9,13 +9,15 @@
 	import Difficulty from '$lib/Difficulty.svelte';
 	import { onMount } from 'svelte';
 	import { io } from 'socket.io-client';
+	import Waitingroom from '$lib/Waitingroom.svelte';
 
 	let difficulty = 0;
-	let screen: undefined | number = undefined;
+	let screen = -2;
 	let colors: undefined | number = undefined;
 	let targetColorIndex: undefined | number = undefined;
 	let selectedColorIndex: undefined | number = undefined;
 	let roomName: undefined | string = undefined;
+	let users: undefined | Array<string> = undefined;
 
 	// Connect to the server
 	const socket = io('http://localhost:3000');
@@ -24,38 +26,62 @@
 		console.log(err);
 	});
 
+	// Join Room
+	function askJoinRoom(submittedRoom: string) {
+		socket.emit('join room', submittedRoom);
+	}
+	socket.on('join room', (room) => {
+		roomName = room;
+		alert(`You have succesfully joined ${roomName}`);
+		handleNextScreenButtonClick();
+	});
+
+	function createRoom() {
+		console.log('Asking to create room');
+		socket.emit('create room');
+	}
+	socket.on('create room', (room) => {
+		roomName = room;
+		alert(`You have succesfully created ${roomName}`);
+		handleNextScreenButtonClick();
+	});
+
+	socket.on('new user', (currentUsers) => {
+		users = currentUsers;
+	});
+
+	function startGame() {
+		console.log('Initialize and starting game');
+		socket.emit('initialize', roomName);
+	}
+
 	// Listen for player movement from the server
 	socket.on('initialize', (data) => {
 		let received_data = JSON.parse(data);
 		targetColorIndex = received_data[0];
 		colors = received_data[1];
-		screen = received_data[2];
+		difficulty = received_data[2];
+		handleNextScreenButtonClick();
 	});
 
-	// Function to handle player movement
+	// Screen click
 	function screenClick() {
 		handleNextScreenButtonClick();
 		socket.emit('next screen', screen);
 	}
-	// Listen for player movement from the server
 	socket.on('next screen', (proposed_screen) => {
 		handleNextScreenButtonClick();
 	});
 
-	// Function to handle player movement
+	// Log in color
 	function logColor() {
 		handleNextScreenButtonClick();
 		socket.emit('log color', selectedColorIndex);
 	}
-	// Listen for player movement from the server
 	socket.on('log color', (selectColor) => {
 		selectedColorIndex = selectColor;
 		handleNextScreenButtonClick();
 	});
-
-	function askJoinRoom(submittedRoom){
-		socket.emit('check room', submittedRoom);
-	}
 
 	// Cleanup on component unmount
 	onMount(() => {
@@ -73,16 +99,10 @@
 	}
 
 	function handleNextScreenButtonClick() {
-		if (screen === 0) {
-			screen = 1;
-		} else if (screen === 1) {
-			screen = 2;
-		} else if (screen === 2) {
-			screen = 3;
-		} else if (screen === 3) {
-			screen = 4;
-		} else if (screen === 4) {
+		if (screen === 4) {
 			reset();
+		} else {
+			screen += 1;
 		}
 	}
 
@@ -118,22 +138,42 @@
 	// selectColor -> getTileVariant
 	// reset
 </script>
-{#if screen === -1}
-	<div class="absolute top-0 left-0 w-full h-full p-32 flex flex-col items-center justify-center bg-black/30"> 
-		<p>Do you want to create or join a room?</p>
-		<div class="w-full h-full flex justify-evenly">
-			<Button buttonText={'CREATE'} on:click={createRoom}/>
-			<Form onSubmit={(data) => joinRoom(data)} placeholder="Room name"/>
+
+{#if screen === -2}
+	<div
+		class="absolute top-0 left-0 w-full h-full p-32 flex flex-col items-center justify-center bg-black/30"
+	>
+		<div class="w-1/3 bg-white rounded-md border">
+			<p>Do you want to create or join a room?</p>
+			<div class="w-full h-full flex justify-evenly">
+				<Button on:next={createRoom} buttonText={'Create'} />
+				<form class="w-full">
+					<input type="text" placeholder="Room Name" id="joinRoom" />
+					<button
+						class="border"
+						on:click={(event) => askJoinRoom(document.getElementById('joinRoom').value)}
+						>Join</button
+					>
+				</form>
+			</div>
 		</div>
 	</div>
-
+{/if}
+{#if screen === -1}
+	<div
+		class="absolute top-0 left-0 w-full h-full p-32 flex items-center justify-center bg-black/30"
+	>
+		<Waitingroom roomUsers={users} room={roomName} />
+	</div>
+{/if}
 {#if screen === 0}
 	<div
 		class="absolute top-0 left-0 w-full h-full p-32 flex items-center justify-center bg-black/30"
 	>
-		<Modal on:next={screenClick} modalButtonText={"Let's go"} />
+		<Modal on:next={startGame} modalButtonText={"Let's go"} />
 	</div>
 {/if}
+
 <div class="w-full min-h-screen flex flex-col items-center px-8 bg-black/10">
 	<div
 		class="w-full flex-1 max-w-[640px] flex flex-col items-center justify-evenly bg-white rounded-2xl my-10 border-2 border-black"

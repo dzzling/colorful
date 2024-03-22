@@ -25,9 +25,18 @@ const io = new Server(server, {
 
 // Define a map to store user IDs
 const userMap = new Map();
-const colors = getRandomColors(1);
-const targetColorIndex = getRandomInt(0, colors.length - 1);
-let screen = 0;
+
+// Define a map to store room users
+const roomUsers = new Map();
+
+// Count up room numbers
+let roomID = 1;
+
+function Room(colors, target, difficulty) {
+    this.colors = colors;
+    this.target = target;
+    this.difficulty = difficulty;
+}
 
 // Define a handler for socket connections
 io.on('connection', (socket) => {
@@ -38,8 +47,45 @@ io.on('connection', (socket) => {
     console.log(`User ${userId} connected`);
     userMap.set(socket.id, userId);
 
-    const initPackage = JSON.stringify([targetColorIndex, colors.map((c) => c.hex()), screen]);
-    socket.emit('initialize', initPackage);
+
+    socket.on('join room', (room) => {
+        const userId = userMap.get(socket.id);
+        socket.join(`${room}`);
+        io.to(socket.id).emit('join room', room);
+
+
+        roomUsers.get(`${room}`).push(userId);
+        let newUserlist = roomUsers.get(`${room}`);
+        roomUsers.set(`${room}`, newUserlist);
+
+        socket.to(room).emit('new user', newUserlist);
+        io.to(socket.id).emit('new user', newUserlist);
+
+        console.log(`User ${userId} has joined room: ${room}`);
+    });
+
+    socket.on('create room', room => {
+        room = 'room' + roomID.toString();
+        // const colors = getRandomColors(0);
+        // const roomState = Room(colors.map((c) => c.hex()), getRandomInt(0, colors.length - 1), 1)
+        // roomStates.set(roomID, roomState)
+        roomID += 1;
+        socket.join(`${room}`);
+        const userId = userMap.get(socket.id);
+        roomUsers.set(`${room}`, [userId]);
+
+        io.to(socket.id).emit('new user', [userId]);
+        io.to(socket.id).emit('create room', room);
+
+        console.log(`User ${userId} has created room ${room}`);
+    });
+
+    socket.on('initialize', room => {
+        // const roomState = roomStates.get(room);
+        const colors = getRandomColors(0);
+        const initPackage = JSON.stringify([getRandomInt(0, colors.length - 1), colors.map((c) => c.hex()), 1]);
+        socket.to(`${room}`).emit('initialize', initPackage);
+    })
 
     socket.on('next screen', (proposed_screen) => {
         screen = proposed_screen;
@@ -47,12 +93,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on('log color', (selectedColor) => {
-        socket.broadcast.emit('log color', selectedColor);
-    });
-
-    socket.on('check room', (submittedRoom) => {
-        const userId = userMap.get(socket.id);
-        // TODO
         socket.broadcast.emit('log color', selectedColor);
     });
 
