@@ -12,7 +12,6 @@
 	<br />
 	<div class=" bg-violet-200 p-1 rounded-lg mb-4 flex flex-row">
 		<p class="px-2">Users in this room:</p>
-		<img src="pin.svg" alt="Icon" width="10%" height="10%" />
 	</div>
 	<ol class="list-decimal px-10 pb-5">
 		{#each roomUsers as user}

@@ -70,9 +70,9 @@ io.on('connection', (socket) => {
         // const roomState = Room(colors.map((c) => c.hex()), getRandomInt(0, colors.length - 1), 1)
         // roomStates.set(roomID, roomState)
         roomID += 1;
-        socket.join(`${room}`);
+        socket.join(room);
         const userId = userMap.get(socket.id);
-        roomUsers.set(`${room}`, [userId]);
+        roomUsers.set(room, [userId]);
 
         io.to(socket.id).emit('new user', [userId]);
         io.to(socket.id).emit('create room', room);
@@ -83,13 +83,12 @@ io.on('connection', (socket) => {
     socket.on('initialize', room => {
         // const roomState = roomStates.get(room);
         const colors = getRandomColors(0);
-        const initPackage = JSON.stringify([getRandomInt(0, colors.length - 1), colors.map((c) => c.hex()), 1]);
-        socket.to(`${room}`).emit('initialize', initPackage);
+        const initPackage = JSON.stringify([getRandomInt(0, colors.length - 1), colors.map((c) => c.hex()), 0]);
+        io.in(room).emit('initialize', initPackage);
     })
 
-    socket.on('next screen', (proposed_screen) => {
-        screen = proposed_screen;
-        socket.broadcast.emit('next screen', proposed_screen);
+    socket.on('next screen', (room) => {
+        socket.to(room).emit('next screen');
     });
 
     socket.on('log color', (selectedColor) => {
