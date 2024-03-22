@@ -51,7 +51,6 @@
 	});
 
 	function startGame() {
-		console.log('Initialize and starting game');
 		socket.emit('initialize', roomName);
 	}
 
@@ -67,9 +66,9 @@
 	// Screen click
 	function screenClick() {
 		handleNextScreenButtonClick();
-		socket.emit('next screen', screen);
+		socket.emit('next screen', roomName);
 	}
-	socket.on('next screen', (proposed_screen) => {
+	socket.on('next screen', () => {
 		handleNextScreenButtonClick();
 	});
 
@@ -163,7 +162,7 @@
 	<div
 		class="absolute top-0 left-0 w-full h-full p-32 flex items-center justify-center bg-black/30"
 	>
-		<Waitingroom roomUsers={users} room={roomName} />
+		<Waitingroom on:next={screenClick} roomUsers={users} room={roomName} />
 	</div>
 {/if}
 {#if screen === 0}
