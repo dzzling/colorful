@@ -32,10 +32,12 @@ const roomUsers = new Map();
 // Count up room numbers
 let roomID = 1;
 
-function Room(colors, target, difficulty) {
+function Room(colors, target, difficulty, users, player) {
     this.colors = colors;
     this.target = target;
     this.difficulty = difficulty;
+    this.users = users;
+    this.player = player;
 }
 
 // Define a handler for socket connections
@@ -85,7 +87,20 @@ io.on('connection', (socket) => {
         const colors = getRandomColors(0);
         const initPackage = JSON.stringify([getRandomInt(0, colors.length - 1), colors.map((c) => c.hex()), 0]);
         io.in(room).emit('initialize', initPackage);
+
+        const rooms = io.of("/").adapter.rooms;
+        const socketsInRoom = rooms.get(room);
+
+        // Log information about each socket in the room
+        socketsInRoom.forEach((_, socketId) => {
+            const socket = io.sockets.sockets.get(socketId);
+            const userId = userMap.get(socketId);
+            io.to(socketId).emit('username', userId)
+        });
+
     })
+
+
 
     socket.on('next screen', (room) => {
         socket.to(room).emit('next screen');
