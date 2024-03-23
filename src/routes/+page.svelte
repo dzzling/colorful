@@ -19,7 +19,7 @@
 	let roomName: undefined | string = undefined;
 	let userName: undefined | string = undefined;
 	let users: undefined | Array<string> = undefined;
-	let player: undefined | Array<string> = undefined;
+	let player: undefined | string = undefined;
 	let playerIndex = 0;
 
 	// Connect to the server
@@ -69,7 +69,6 @@
 
 	socket.on('username', (username) => {
 		userName = username;
-		console.log(player, userName);
 	});
 
 	// Screen click
@@ -84,33 +83,42 @@
 	// Log in color
 	function logColor() {
 		handleNextScreenButtonClick();
-		socket.emit('log color', selectedColorIndex);
+		socket.emit('log color', [selectedColorIndex, roomName]);
 	}
 	socket.on('log color', (selectColor) => {
 		selectedColorIndex = selectColor;
 		handleNextScreenButtonClick();
 	});
 
+	function resetGame(newDifficulty: number = difficulty) {
+		socket.emit('resetGame', [newDifficulty, roomName]);
+	}
+
+	socket.on('reset game', (resetPackage) => {
+		console.log('Reset');
+		let received_data = JSON.parse(resetPackage);
+		targetColorIndex = received_data[0];
+		colors = received_data[1];
+		difficulty = received_data[2];
+		selectedColorIndex = undefined;
+		screen = 1;
+		playerIndex += 1;
+		player = users[playerIndex % users.length];
+		console.log(screen);
+	});
+
 	// Cleanup on component unmount
 	onMount(() => {
 		return () => {
+			users = undefined;
+			userName = undefined;
 			socket.disconnect();
 		};
 	});
 
-	function reset(newDifficulty: number = difficulty) {
-		screen = 1;
-		difficulty = newDifficulty;
-		colors = getRandomColors(difficulty);
-		targetColorIndex = getRandomInt(0, colors.length - 1);
-		selectedColorIndex = undefined;
-	}
-
 	function handleNextScreenButtonClick() {
 		if (screen === 4) {
-			reset();
-		} else if (screen === 1 && player === userName) {
-			screen = 3;
+			resetGame();
 		} else {
 			screen += 1;
 		}
@@ -121,7 +129,7 @@
 	}
 
 	function getTileVariantForColorIndex(colorIndex: number) {
-		if (screen === 2 && targetColorIndex === colorIndex) {
+		if (screen === 2 && targetColorIndex === colorIndex && player != userName) {
 			return 'TARGET';
 		} else if (screen === 3 && selectedColorIndex === colorIndex) {
 			return 'SELECTED';
@@ -145,25 +153,29 @@
 			return 'LOST_CORRECT';
 		}
 	}
-	// selectColor -> getTileVariant
-	// reset
 </script>
 
 {#if screen === -2}
 	<div
 		class="absolute top-0 left-0 w-full h-full p-32 flex flex-col items-center justify-center bg-black/30"
 	>
-		<div class="w-1/3 bg-white rounded-md border">
+		<div class="w-2/3 p-6 bg-white rounded-md border flex flex-col justify-center items-center">
 			<p>Do you want to create or join a room?</p>
-			<div class="w-full h-full flex justify-evenly">
+			<div class="w-full h-full flex flex-col items-center">
+				<br />
 				<Button on:next={createRoom} buttonText={'Create'} />
-				<form class="w-full">
-					<input type="text" placeholder="Room Name" id="joinRoom" />
-					<button
-						class="border"
-						on:click={(event) => askJoinRoom(document.getElementById('joinRoom').value)}
-						>Join</button
-					>
+				<p class="mb-1 mt-4">OR</p>
+				<form class="w-full flex flex-col items-center">
+					<input
+						class="flex my-3 px-6 flex-col justify-center items-center border-2 rounded-2xl border-pink-500 w-96 h-24"
+						type="text"
+						placeholder="Enter Room Name"
+						id="joinRoom"
+					/>
+					<Button
+						on:next={(event) => askJoinRoom(document.getElementById('joinRoom').value)}
+						buttonText={'Join'}
+					/>
 				</form>
 			</div>
 		</div>
@@ -203,19 +215,22 @@
 		<div class="w-full h-32 flex flex-col justify-center items-center">
 			{#if screen === 1 && userName != player}
 				<Button on:next={screenClick} buttonText={'Show me the target'} />
-			{:else if screen === 1 && userName === player}
-				<Button on:next={screenClick} buttonText={'Next'} />
-			{:else if screen === 2}
+			{:else if ((screen === 1 || screen === 2) && userName === player) || (screen === 3 && userName != player)}
+				<p class="text-lg">Wait</p>
+			{:else if screen === 2 && userName != player}
 				<Button on:next={screenClick} buttonText={'Got it'} />
-			{:else if screen === 3 && selectedColorIndex === undefined}
+			{:else if screen === 3 && selectedColorIndex === undefined && userName === player}
 				<p class="text-lg">Please select a color</p>
-			{:else if screen === 3 && selectedColorIndex != undefined}
+			{:else if screen === 3 && selectedColorIndex != undefined && userName === player}
 				<Button on:next={logColor} buttonText={'Log color in'} />
 			{:else if screen === 4}
 				{#if targetColorIndex === selectedColorIndex}
-					<Button on:next={screenClick} buttonText={'Correct. Another round!'} />
+					<Button on:next={(e) => resetGame(difficulty)} buttonText={'Correct. Another round!'} />
 				{:else}
-					<Button on:next={screenClick} buttonText={'Close enough. Another round!'} />
+					<Button
+						on:next={(e) => resetGame(difficulty)}
+						buttonText={'Close enough. Another round!'}
+					/>
 				{/if}
 			{/if}
 		</div>
@@ -223,9 +238,15 @@
 			{#if screen === 1}
 				<Difficulty
 					difficultyIndex={difficulty}
-					on:resetAll={(e) => reset(parseInt(e.currentTarget.value))}
+					on:resetAll={(e) => resetGame(parseInt(e.currentTarget.value))}
 				/>
 			{/if}
 		</div>
 	</div>
 </div>
+
+<style>
+	::placeholder {
+		text-align: center;
+	}
+</style>
