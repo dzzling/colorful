@@ -102,11 +102,12 @@ io.on('connection', (socket) => {
         socket.to(room).emit('log color', selectedColor);
     });
 
-    socket.on('resetGame', (roomData) => {
-        const newDifficulty = roomData[0];
-        const room = roomData[1];
+    socket.on('resetGame', (receivedData) => {
+        const newDifficulty = receivedData[0];
+        const room = receivedData[1];
+        const type = receivedData[2];
         const colors = getRandomColors(newDifficulty);
-        const resetPackage = JSON.stringify([getRandomInt(0, colors.length - 1), colors.map((c) => c.hex()), newDifficulty]);
+        const resetPackage = JSON.stringify([getRandomInt(0, colors.length - 1), colors.map((c) => c.hex()), newDifficulty, type]);
         io.in(room).emit('reset game', resetPackage);
     })
 
