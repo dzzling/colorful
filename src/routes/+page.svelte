@@ -6,7 +6,7 @@
 	import Button from '$lib/Button.svelte';
 	import Modal from '$lib/Modal.svelte';
 	import Tile from '$lib/Tile.svelte';
-	import Difficulty from '$lib/Difficulty.svelte';
+	import DifficultySlider from '$lib/DifficultySlider.svelte';
 	import { onMount } from 'svelte';
 	import { io } from 'socket.io-client';
 	import Waitingroom from '$lib/Waitingroom.svelte';
@@ -90,21 +90,22 @@
 		handleNextScreenButtonClick();
 	});
 
-	function resetGame(newDifficulty: number = difficulty) {
-		socket.emit('resetGame', [newDifficulty, roomName]);
+	function resetGame(newDifficulty: number = difficulty, type: string = 'newround') {
+		socket.emit('resetGame', [newDifficulty, roomName, type]);
 	}
 
 	socket.on('reset game', (resetPackage) => {
 		console.log('Reset');
-		let received_data = JSON.parse(resetPackage);
-		targetColorIndex = received_data[0];
-		colors = received_data[1];
-		difficulty = received_data[2];
-		selectedColorIndex = undefined;
+		let receivedData = JSON.parse(resetPackage);
+		targetColorIndex = receivedData[0];
+		colors = receivedData[1];
+		difficulty = receivedData[2];
 		screen = 1;
-		playerIndex += 1;
-		player = users[playerIndex % users.length];
-		console.log(screen);
+		selectedColorIndex = undefined;
+		if (receivedData[3] === 'newround') {
+			playerIndex += 1;
+			player = users[playerIndex % users.length];
+		}
 	});
 
 	// Cleanup on component unmount
@@ -236,9 +237,9 @@
 		</div>
 		<div class="h-16 w-full">
 			{#if screen === 1}
-				<Difficulty
-					difficultyIndex={difficulty}
-					on:resetAll={(e) => resetGame(parseInt(e.currentTarget.value))}
+				<DifficultySlider
+					value={difficulty}
+					on:change={(e) => resetGame(e.detail, 'changedifficulty')}
 				/>
 			{/if}
 		</div>
