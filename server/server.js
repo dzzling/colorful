@@ -6,6 +6,7 @@ import cors from 'cors';
 import { v4 as uuidv4 } from 'uuid';
 import { getRandomColors } from '../src/lib/colors.js';
 import { getRandomInt } from '../src/lib/random.js';
+import { generateUsername } from '../src/lib/generator.js';
 
 // Create an Express app
 const app = express();
@@ -33,7 +34,7 @@ let roomID = 1;
 // Define a handler for socket connections
 io.on('connection', (socket) => {
 
-    const userId = uuidv4();
+    const userId = generateUsername();
 
     // Log user ID and store it in the map
     console.log(`User ${userId} connected`);
