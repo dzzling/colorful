@@ -35,7 +35,11 @@
 	}
 	socket.on('join room', (room) => {
 		roomName = room;
-		alert(`You have succesfully joined ${roomName}`);
+		if (users === undefined || users.length === 1) {
+			alert('Oops! You have joined an empty room.');
+		} else {
+			alert(`You have succesfully joined ${roomName}`);
+		}
 		handleNextScreenButtonClick();
 	});
 

@@ -44,9 +44,6 @@ io.on('connection', (socket) => {
     socket.on('join room', (room) => {
         const userId = userMap.get(socket.id);
         socket.join(`${room}`);
-        io.to(socket.id).emit('join room', room);
-
-        // TODO if room was joined with created
 
         const rooms = io.of("/").adapter.rooms;
         const socketsInRoom = rooms.get(room);
@@ -54,12 +51,12 @@ io.on('connection', (socket) => {
         const roomUsers = []
         socketsInRoom.forEach((_, socketId) => {
             const userId = userMap.get(socketId);
-            console.log(userId)
             roomUsers.push(userId);
         });
 
         socket.to(room).emit('new user', roomUsers);
         io.to(socket.id).emit('new user', roomUsers);
+        io.to(socket.id).emit('join room', room);
 
         console.log(`User ${userId} has joined room: ${room}`);
     });
