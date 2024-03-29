@@ -10,6 +10,7 @@
 	import { onMount } from 'svelte';
 	import { io } from 'socket.io-client';
 	import Waitingroom from '$lib/Waitingroom.svelte';
+	import Reception from '$lib/Reception.svelte';
 
 	let difficulty = 0;
 	let screen = -2;
@@ -164,26 +165,10 @@
 	<div
 		class="absolute top-0 left-0 w-full h-full p-32 flex flex-col items-center justify-center bg-black/30"
 	>
-		<div class="w-2/3 p-6 bg-white rounded-md border flex flex-col justify-center items-center">
-			<p>Do you want to create or join a room?</p>
-			<div class="w-full h-full flex flex-col items-center">
-				<br />
-				<Button on:next={createRoom} buttonText={'Create'} />
-				<p class="mb-1 mt-4">OR</p>
-				<form class="w-full flex flex-col items-center">
-					<input
-						class="flex my-3 px-6 flex-col justify-center items-center border-2 rounded-2xl border-pink-500 w-96 h-24"
-						type="text"
-						placeholder="Enter Room Name"
-						id="joinRoom"
-					/>
-					<Button
-						on:next={(event) => askJoinRoom(document.getElementById('joinRoom').value)}
-						buttonText={'Join'}
-					/>
-				</form>
-			</div>
-		</div>
+		<Reception
+			on:join={(event) => askJoinRoom(document.getElementById('joinRoom').value)}
+			on:create={createRoom}
+		/>
 	</div>
 {/if}
 {#if screen === -1}
