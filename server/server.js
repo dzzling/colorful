@@ -6,7 +6,8 @@ import cors from 'cors';
 import { v4 as uuidv4 } from 'uuid';
 import { getRandomColors } from '../src/lib/colors.js';
 import { getRandomInt } from '../src/lib/random.js';
-import { generateUsername } from '../src/lib/generator.js';
+import { generateUsername } from '../src/lib/generateNames.js';
+import { generateRoom } from '../src/lib/generateRoomNames.js';
 
 // Create an Express app
 const app = express();
@@ -28,7 +29,8 @@ const io = new Server(server, {
 const userMap = new Map();
 
 // Count up room numbers
-let roomID = 1;
+let adjIdx = 0;
+let nounIdx = 0;
 
 
 // Define a handler for socket connections
@@ -62,8 +64,19 @@ io.on('connection', (socket) => {
     });
 
     socket.on('create room', room => {
-        room = 'room' + roomID.toString();
-        roomID += 1;
+
+        if (adjIdx === 49) {
+            adjIdx = 0;
+            nounIdx += 1;
+        }
+        if (nounIdx === 49) {
+            adjIdx = 0;
+            nounIdx = 0;
+        }
+        room = generateRoom(adjIdx, nounIdx);
+        adjIdx += 1;
+
+
         socket.join(room);
         const userId = userMap.get(socket.id);
 

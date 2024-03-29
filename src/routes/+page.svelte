@@ -136,7 +136,7 @@
 	function getTileVariantForColorIndex(colorIndex: number) {
 		if (screen === 2 && targetColorIndex === colorIndex && player != userName) {
 			return 'TARGET';
-		} else if (screen === 3 && selectedColorIndex === colorIndex) {
+		} else if (screen === 3 && selectedColorIndex === colorIndex && player == userName) {
 			return 'SELECTED';
 		} else if (
 			screen === 4 &&
