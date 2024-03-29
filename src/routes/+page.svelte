@@ -159,6 +159,18 @@
 			return 'LOST_CORRECT';
 		}
 	}
+
+	function getTurn() {
+		if (
+			(player === userName && screen === 3) ||
+			(player != userName && (screen === 1 || screen === 2)) ||
+			[-2, -1, 0, 4].includes(screen)
+		) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 </script>
 
 {#if screen === -2}
@@ -192,6 +204,13 @@
 	>
 		<div class="w-full h-full flex flex-col justify-center items-center">
 			<h1 class="text-center text-3xl font-bold w-full">Colorfül</h1>
+		</div>
+		<div class="flex">
+			{#if getTurn() === 1}
+				<p>Your turn</p>
+			{:else}
+				<p>Not your turn</p>
+			{/if}
 		</div>
 		<div class="h-96 w-96 grid grid-rows-3 grid-cols-3 gap-4">
 			{#each colors as color, index}
