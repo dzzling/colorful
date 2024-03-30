@@ -122,6 +122,12 @@ io.on('connection', (socket) => {
         io.in(room).emit('reset game', resetPackage);
     })
 
+    socket.on('send clue', (clue) => {
+        let room = io.of("/").adapter.sids.get(socket.id);
+        console.log([...room].pop());
+        io.in([...room].pop()).emit('receive clue', clue);
+    });
+
     socket.on('disconnect', (room) => {
         // Get the user ID from the map
         const userId = userMap.get(socket.id);

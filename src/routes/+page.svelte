@@ -22,6 +22,7 @@
 	let users: undefined | Array<string> = undefined;
 	let player: undefined | string = undefined;
 	let playerIndex = 0;
+	let clue = 'No clue yet';
 
 	// Connect to the server
 	const socket = io('http://localhost:3000');
@@ -111,6 +112,16 @@
 			playerIndex += 1;
 			player = users[playerIndex % users.length];
 		}
+	});
+
+	function sendClue(newClue) {
+		socket.emit('send clue', newClue);
+	}
+
+	socket.on('receive clue', (newClue) => {
+		clue = newClue;
+		console.log(clue);
+		handleNextScreenButtonClick();
 	});
 
 	// Cleanup on component unmount
@@ -227,9 +238,14 @@
 			{:else if ((screen === 1 || screen === 2) && userName === player) || (screen === 3 && userName != player)}
 				<p class="text-lg">Wait</p>
 			{:else if screen === 2 && userName != player}
-				<Button on:next={screenClick} buttonText={'Got it'} />
+				<input class="w-96 h-24" type="text" id="clue" placeholder="Enter clue" />
+				<Button
+					on:next={(e) => sendClue(document.getElementById('clue').value)}
+					buttonText={'Send clue'}
+				/>
 			{:else if screen === 3 && selectedColorIndex === undefined && userName === player}
-				<p class="text-lg">Please select a color</p>
+				<p>{clue}</p>
+				<p class="text-lg mt-4">Please select a color</p>
 			{:else if screen === 3 && selectedColorIndex != undefined && userName === player}
 				<Button on:next={logColor} buttonText={'Log color in'} />
 			{:else if screen === 4}
