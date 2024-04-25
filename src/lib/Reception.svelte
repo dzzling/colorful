@@ -1,11 +1,18 @@
-<script>
+<script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import Button from '$lib/Button.svelte';
-	export let modalButtonText = 'Click me';
 
-	const dispatch = createEventDispatcher();
+	let roomName = '';
+
+	type Events = {
+		create: undefined;
+		join: { roomName: string };
+	};
+
+	const dispatch = createEventDispatcher<Events>();
+
 	function joinRoom() {
-		dispatch('join');
+		dispatch('join', { roomName });
 	}
 	function createRoom() {
 		dispatch('create');
@@ -29,6 +36,7 @@
 				type="text"
 				placeholder="Enter Room Name"
 				id="joinRoom"
+				bind:value={roomName}
 			/>
 			<Button on:next={joinRoom} buttonText={'Join'} />
 		</form>
