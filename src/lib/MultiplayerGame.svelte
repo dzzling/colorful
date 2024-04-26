@@ -117,6 +117,7 @@
 		colors.update((n) => receivedData[1]);
 		difficulty.update((n) => receivedData[2]);
 		screen.update((n) => 1);
+		clue.update((n) => 'No clue yet');
 		selectedColorIndex.update((n) => undefined);
 		if (receivedData[3] === 'newround') {
 			playerIndex += 1;
@@ -157,14 +158,14 @@
 
 {#if subscribedScreen === -2}
 	<div
-		class="absolute top-0 left-0 w-full h-full p-32 flex flex-col items-center justify-center bg-black/30"
+		class="absolute top-0 left-0 w-full h-full p-32 flex flex-col items-center justify-center bg-black/30 z-0"
 	>
 		<Reception on:join={(event) => askJoinRoom(event.detail.roomName)} on:create={createRoom} />
 	</div>
 {/if}
 {#if subscribedScreen === -1}
 	<div
-		class="absolute top-0 left-0 w-full h-full p-32 flex items-center justify-center bg-black/30"
+		class="absolute top-0 left-0 w-full h-full p-32 flex items-center justify-center bg-black/30 z-0"
 	>
 		<Waitingroom on:next={screenClick} roomUsers={users} room={roomName} />
 	</div>

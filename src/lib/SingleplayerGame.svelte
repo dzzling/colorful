@@ -12,6 +12,7 @@
 	let targetColorIndex = getRandomInt(0, colors.length - 1);
 	let selectedColorIndex: undefined | number = undefined;
 	let buttonContent = "Let's go";
+	let clue: string = '';
 
 	function reset(newDifficulty: number = difficulty) {
 		screen = 1;
@@ -20,6 +21,7 @@
 		targetColorIndex = getRandomInt(0, colors.length - 1);
 		selectedColorIndex = undefined;
 		buttonContent = 'Show me the target';
+		clue = '';
 	}
 
 	function handleNextScreenButtonClick() {
@@ -28,7 +30,7 @@
 			buttonContent = 'Show me the target';
 		} else if (screen === 1) {
 			screen = 2;
-			buttonContent = 'Got it';
+			buttonContent = 'Log clue';
 		} else if (screen === 2) {
 			screen = 3;
 		} else if (screen === 3) {
@@ -99,10 +101,19 @@
 		</div>
 		<div class="w-full h-32 flex flex-col justify-center items-center">
 			{#if screen !== 3}
+				{#if screen === 2}
+					<input
+						class="w-96 h-16 my-4 px-2 py-1 outline outline-0"
+						type="text"
+						id="clue"
+						placeholder="Enter clue"
+						bind:value={clue}
+					/>{/if}
 				<Button on:next={handleNextScreenButtonClick} buttonText={buttonContent} />
 			{:else if screen === 3 && selectedColorIndex !== undefined}
 				<Button on:next={handleNextScreenButtonClick} buttonText={'Log in'} />
 			{:else if screen === 3 && selectedColorIndex === undefined}
+				<p>Clue: {clue}</p>
 				<p class="text-lg">Please select a color</p>
 			{/if}
 		</div>

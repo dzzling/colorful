@@ -88,6 +88,7 @@
 		dispatch('logColor');
 	}
 	function resetGame() {
+		newClue = '';
 		dispatch('resetGame');
 	}
 
