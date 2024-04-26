@@ -23,7 +23,6 @@
 	class="w-full max-w-[480px] h-full border-2 border-black bg-white rounded-2xl cursor-auto flex flex-col justify-center items-center p-2"
 >
 	<div class="text-3xl mt-8 mx-8">
-		<p class="text-pink-500">Hi!</p>
 		<p>Do you want to create or join a room?</p>
 	</div>
 	<div class="w-full h-full flex flex-col items-center">
