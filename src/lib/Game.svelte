@@ -177,7 +177,7 @@
 				<p class="text-lg">Wait</p>
 			{:else if subscribedScreen === 2 && subscribedUserName != subscribedPlayer}
 				<input
-					class="w-96 h-24"
+					class="w-96 h-16 my-4 px-2 py-1 outline outline-0"
 					type="text"
 					id="clue"
 					placeholder="Enter clue"
@@ -185,7 +185,7 @@
 				/>
 				<Button on:next={sendClue} buttonText={'Send clue'} />
 			{:else if subscribedScreen === 3 && subscribedSelectedColorIndex === undefined && subscribedUserName === subscribedPlayer}
-				<p>{subscribedClue}</p>
+				<p>Clue: {subscribedClue}</p>
 				<p class="text-lg mt-4">Please select a color</p>
 			{:else if subscribedScreen === 3 && subscribedSelectedColorIndex != undefined && subscribedUserName === subscribedPlayer}
 				<Button on:next={logColor} buttonText={'Log color in'} />

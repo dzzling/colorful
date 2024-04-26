@@ -4,7 +4,6 @@
 	import Waitingroom from '$lib/Waitingroom.svelte';
 	import Reception from '$lib/Reception.svelte';
 	import Game from './Game.svelte';
-	import type { Color } from 'chroma-js';
 	import {
 		difficulty,
 		screen,
@@ -16,9 +15,9 @@
 		clue
 	} from './../stores.js';
 
-	let subscribedDifficulty = 0;
-	let subscribedScreen = -2;
-	let subscribedSelectedColorIndex: undefined | number = undefined;
+	let subscribedDifficulty: number;
+	let subscribedScreen: number;
+	let subscribedSelectedColorIndex: undefined | number;
 
 	let roomName: undefined | string = undefined;
 	let users: Array<string>;
@@ -98,7 +97,6 @@
 	});
 
 	// Log in color
-	// TODO: Check if works with new logic
 	function logColor() {
 		handleNextScreenButtonClick();
 		socket.emit('log color', [subscribedSelectedColorIndex, roomName]);
@@ -132,7 +130,6 @@
 
 	socket.on('receive clue', (newClue) => {
 		clue.update((n) => newClue);
-		console.log(clue);
 		handleNextScreenButtonClick();
 	});
 
@@ -178,7 +175,7 @@
 		on:difficultyChange={(e) => resetGame(e.detail, 'changedifficulty')}
 		on:selectColor={(e) => selectColor(e.detail)}
 		on:screenClick={screenClick}
-		on:sendClue={(e) => sendClue(e.detail)}
+		on:sendClue={(e) => sendClue(e.detail.newClue)}
 		on:logColor={logColor}
 		on:resetGame={(e) => resetGame()}
 	/>
