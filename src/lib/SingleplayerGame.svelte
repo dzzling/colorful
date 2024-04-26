@@ -4,7 +4,7 @@
 	import Button from '$lib/Button.svelte';
 	import Modal from '$lib/Modal.svelte';
 	import Tile from '$lib/Tile.svelte';
-	import Difficulty from '$lib/DifficultySlider.svelte';
+	import DifficultySlider from '$lib/DifficultySlider.svelte';
 
 	let difficulty = 0;
 	let screen = 0;
@@ -119,10 +119,7 @@
 		</div>
 		<div class="h-16 w-full">
 			{#if screen === 1}
-				<Difficulty
-					difficultyIndex={difficulty}
-					on:resetAll={(e) => reset(parseInt(e.currentTarget.value))}
-				/>
+				<DifficultySlider value={difficulty} on:change={(e) => reset(e.detail)} />
 			{/if}
 		</div>
 	</div>
