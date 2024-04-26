@@ -13,7 +13,8 @@
 		selectedColorIndex,
 		userName,
 		player,
-		clue
+		clue,
+		gameMode
 	} from './../stores.js';
 
 	let subscribedDifficulty: number;
@@ -24,6 +25,7 @@
 	let subscribedUserName: string | undefined;
 	let subscribedPlayer: string | undefined;
 	let subscribedClue: string;
+	let subscribedGameMode: string;
 
 	difficulty.subscribe((value) => {
 		subscribedDifficulty = value;
@@ -48,6 +50,9 @@
 	});
 	clue.subscribe((value) => {
 		subscribedClue = value;
+	});
+	gameMode.subscribe((value) => {
+		subscribedGameMode = value;
 	});
 
 	type Events = {
@@ -93,7 +98,9 @@
 	}
 
 	function getTurn() {
-		if (
+		if (subscribedGameMode === 'single') {
+			return 1;
+		} else if (
 			(subscribedPlayer === subscribedUserName && subscribedScreen === 3) ||
 			(subscribedPlayer != subscribedUserName &&
 				(subscribedScreen === 1 || subscribedScreen === 2)) ||
@@ -109,13 +116,13 @@
 		if (
 			subscribedScreen === 2 &&
 			subscribedTargetColorIndex === colorIndex &&
-			subscribedPlayer != subscribedUserName
+			(subscribedGameMode === 'single' || subscribedPlayer != subscribedUserName)
 		) {
 			return 'TARGET';
 		} else if (
 			subscribedScreen === 3 &&
 			subscribedSelectedColorIndex === colorIndex &&
-			subscribedPlayer == subscribedUserName
+			(subscribedGameMode === 'single' || subscribedPlayer == subscribedUserName)
 		) {
 			return 'SELECTED';
 		} else if (
@@ -172,11 +179,11 @@
 			{/each}
 		</div>
 		<div class="w-full h-32 flex flex-col justify-center items-center">
-			{#if subscribedScreen === 1 && subscribedUserName != subscribedPlayer}
+			{#if subscribedScreen === 1 && (subscribedGameMode === 'single' || subscribedPlayer != subscribedUserName)}
 				<Button on:next={handleScreenClick} buttonText={'Show me the target'} />
-			{:else if ((subscribedScreen === 1 || subscribedScreen === 2) && subscribedUserName === subscribedPlayer) || (subscribedScreen === 3 && subscribedUserName != subscribedPlayer)}
+			{:else if (subscribedGameMode != 'single' && (subscribedScreen === 1 || subscribedScreen === 2) && subscribedUserName === subscribedPlayer) || (subscribedScreen === 3 && subscribedUserName != subscribedPlayer)}
 				<p class="text-lg">Wait</p>
-			{:else if subscribedScreen === 2 && subscribedUserName != subscribedPlayer}
+			{:else if subscribedScreen === 2 && (subscribedGameMode === 'single' || subscribedPlayer != subscribedUserName)}
 				<input
 					class="w-96 h-16 my-4 px-2 py-1 outline outline-0"
 					type="text"
@@ -185,10 +192,10 @@
 					bind:value={newClue}
 				/>
 				<Button on:next={sendClue} buttonText={'Send clue'} />
-			{:else if subscribedScreen === 3 && subscribedSelectedColorIndex === undefined && subscribedUserName === subscribedPlayer}
+			{:else if subscribedScreen === 3 && subscribedSelectedColorIndex === undefined && (subscribedGameMode === 'single' || subscribedPlayer == subscribedUserName)}
 				<p>Clue: {subscribedClue}</p>
 				<p class="text-lg mt-4">Please select a color</p>
-			{:else if subscribedScreen === 3 && subscribedSelectedColorIndex != undefined && subscribedUserName === subscribedPlayer}
+			{:else if subscribedScreen === 3 && subscribedSelectedColorIndex != undefined && (subscribedGameMode === 'single' || subscribedPlayer == subscribedUserName)}
 				<Button on:next={logColor} buttonText={'Log color in'} />
 			{:else if subscribedScreen === 4}
 				{#if subscribedTargetColorIndex === subscribedSelectedColorIndex}

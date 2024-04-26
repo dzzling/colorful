@@ -8,3 +8,4 @@ export const selectedColorIndex = writable();
 export const userName = writable();
 export const player = writable();
 export const clue = writable('No clue yet');
+export const gameMode = writable();

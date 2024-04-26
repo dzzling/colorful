@@ -12,7 +12,8 @@
 		selectedColorIndex,
 		userName,
 		player,
-		clue
+		clue,
+		gameMode
 	} from './../stores.js';
 
 	let subscribedDifficulty: number;
@@ -22,6 +23,7 @@
 	let roomName: undefined | string = undefined;
 	let users: Array<string>;
 	let playerIndex = 0;
+	gameMode.update((n) => 'multiple');
 
 	difficulty.subscribe((value) => {
 		subscribedDifficulty = value;
@@ -125,7 +127,7 @@
 		}
 	});
 
-	function sendClue(newClue: any) {
+	function sendClue(newClue: string) {
 		socket.emit('send clue', newClue);
 	}
 
