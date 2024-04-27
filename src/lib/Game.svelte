@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/Button.svelte';
+	import Button from '$lib/BigButton.svelte';
 	import Modal from '$lib/Modal.svelte';
 	import Tile from '$lib/Tile.svelte';
 	import DifficultySlider from '$lib/DifficultySlider.svelte';
@@ -149,19 +149,17 @@
 
 {#if subscribedScreen === 0}
 	<div
-		class="absolute top-0 left-0 w-full h-full p-32 flex items-center justify-center bg-black/30"
+		class="absolute top-0 left-0 w-full h-full p-6 sm:p-32 flex items-center justify-center bg-black/30"
 	>
-		<Modal on:next={handleStartGame} modalButtonText={"Let's go"} />
+		<Modal on:smallButton={handleStartGame} modalButtonText={"Let's go"} />
 	</div>
 {/if}
 
-<div class="w-full min-h-screen flex flex-col items-center px-8 bg-black/10">
+<div class="w-full min-h-screen flex flex-col items-center p-6 sm:pb-12 bg-black/30">
 	<div
-		class="w-full flex-1 max-w-[640px] flex flex-col items-center justify-evenly bg-white rounded-2xl my-10 border-2 border-black"
+		class="w-full flex-1 sm:max-w-[640px] flex flex-col items-center justify-evenly bg-white rounded-2xl border-2 border-black"
 	>
-		<div class="w-full h-full flex flex-col justify-center items-center">
-			<h1 class="text-center text-3xl font-bold w-full">Colorfül</h1>
-		</div>
+		<h1 class="text-center text-3xl font-bold w-full pt-4">Colorfül</h1>
 		<div class="flex">
 			{#if getTurn() === 1}
 				<p>Your turn</p>
@@ -169,7 +167,7 @@
 				<p>Not your turn</p>
 			{/if}
 		</div>
-		<div class="h-96 w-96 grid grid-rows-3 grid-cols-3 gap-4">
+		<div class="h-56 w-56 sm:h-96 sm:w-96 grid grid-rows-3 grid-cols-3 gap-2 sm:gap-4">
 			{#each subscribedColors as color, index}
 				<Tile
 					tileColor={color}
@@ -178,14 +176,14 @@
 				/>
 			{/each}
 		</div>
-		<div class="w-full h-32 flex flex-col justify-center items-center">
+		<div class="w-full h-24 sm:h-32 flex flex-col justify-center items-center">
 			{#if subscribedScreen === 1 && (subscribedGameMode === 'single' || subscribedPlayer != subscribedUserName)}
 				<Button on:next={handleScreenClick} buttonText={'Show me the target'} />
 			{:else if (subscribedGameMode != 'single' && (subscribedScreen === 1 || subscribedScreen === 2) && subscribedUserName === subscribedPlayer) || (subscribedScreen === 3 && subscribedUserName != subscribedPlayer)}
 				<p class="text-lg">Wait</p>
 			{:else if subscribedScreen === 2 && (subscribedGameMode === 'single' || subscribedPlayer != subscribedUserName)}
 				<input
-					class="w-96 h-16 my-4 px-2 py-1 outline outline-0"
+					class="w-56 sm:w-96 h-16 my-4 px-2 py-1 outline outline-0"
 					type="text"
 					id="clue"
 					placeholder="Enter clue"
@@ -205,7 +203,7 @@
 				{/if}
 			{/if}
 		</div>
-		<div class="h-16 w-full">
+		<div class="sm:h-16 h-12 w-full">
 			{#if subscribedScreen === 1}
 				<DifficultySlider
 					value={subscribedDifficulty}

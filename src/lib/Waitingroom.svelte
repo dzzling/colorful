@@ -1,5 +1,5 @@
 <script>
-	import Button from '$lib/Button.svelte';
+	import Button from '$lib/BigButton.svelte';
 	export let room = '---ERROR---';
 	export let roomUsers = new Array();
 </script>

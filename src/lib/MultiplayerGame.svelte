@@ -160,14 +160,14 @@
 
 {#if subscribedScreen === -2}
 	<div
-		class="absolute top-0 left-0 w-full h-full p-32 flex flex-col items-center justify-center bg-black/30 z-0"
+		class="absolute top-0 left-0 w-full h-full p-6 sm:p-32 flex flex-col items-center justify-center bg-black/30 z-0"
 	>
 		<Reception on:join={(event) => askJoinRoom(event.detail.roomName)} on:create={createRoom} />
 	</div>
 {/if}
 {#if subscribedScreen === -1}
 	<div
-		class="absolute top-0 left-0 w-full h-full p-32 flex items-center justify-center bg-black/30 z-0"
+		class="absolute top-0 left-0 w-full h-full p-6 sm:p-32 flex items-center justify-center bg-black/30 z-0"
 	>
 		<Waitingroom on:next={screenClick} roomUsers={users} room={roomName} />
 	</div>
