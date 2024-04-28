@@ -78,6 +78,11 @@
 	}
 </script>
 
+<div
+	class="fixed flex portrait:hidden lg:hidden h-full w-full bg-white justify-center items-center text-2xl z-30"
+>
+	<p>Please turn your screen</p>
+</div>
 <Game
 	on:start={handleNextScreenButtonClick}
 	on:difficultyChange={(e) => reset(e.detail)}

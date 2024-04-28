@@ -34,3 +34,8 @@
 {#if gameMode === 'single'}
 	<SingleplayerGame />
 {/if}
+<div
+	class="fixed flex portrait:hidden lg:hidden h-full w-full bg-white justify-center items-center text-2xl"
+>
+	<p>Please turn your screen</p>
+</div>

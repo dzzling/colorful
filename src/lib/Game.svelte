@@ -155,7 +155,7 @@
 	</div>
 {/if}
 
-<div class="w-full min-h-screen flex flex-col items-center p-6 sm:pb-12 bg-black/30">
+<div class="w-full h-full flex flex-col items-center p-6 sm:pb-12 bg-black/30">
 	<div
 		class="w-full flex-1 sm:max-w-[640px] flex flex-col items-center justify-evenly bg-white rounded-2xl border-2 border-black"
 	>
