@@ -2,9 +2,9 @@
 
 Colorfül is a single- and multiplayer game based on the board game 'Hues and Clues'. 
 
-![View of the Colorfül application](static/colorfül_screenshot.png)
+<img src="static/colorfül_screenshot.png" alt="Screenshot of the colorfül app" width="300"/>
 
-# About the architecture
+## About the architecture
 
 Colorfül is developed using SvelteKit, a user-friendly UI framework based on Svelte. In the multiplayer mode, players connect to the server via SocketIO for real-time interaction. On the other hand, the single-player mode operates offline, allowing users to enjoy the game independently.
 
