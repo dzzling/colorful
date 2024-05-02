@@ -1,22 +1,17 @@
-# create-svelte
+# Colorfül
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+Colorfül is a single- and multiplayer game based on the board game 'Hues and Clues'. 
 
-## Creating a project
+![View of the Colorfül application](static/colorfül_screenshot.png)
 
-If you're seeing this, you've probably already done this step. Congrats!
+# About the architecture
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+Colorfül is developed using SvelteKit, a user-friendly UI framework based on Svelte. In the multiplayer mode, players connect to the server via SocketIO for real-time interaction. On the other hand, the single-player mode operates offline, allowing users to enjoy the game independently.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Install the dependencies with `npm install`, then start a development server:
 
 ```bash
 npm run dev
@@ -25,14 +20,16 @@ npm run dev
 npm run dev -- --open
 ```
 
+To start the server, run:
+
+```bash
+node server/server.js
+```
+
 ## Building
 
-To create a production version of your app:
+To create a production version of the app:
 
 ```bash
 npm run build
 ```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
