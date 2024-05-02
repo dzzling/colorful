@@ -26,6 +26,6 @@
 			<li>Continue to the next round and keep the fun going!</li>
 		</ol>
 
-		<Button on:smallButton buttonText={modalButtonText} />
+		<Button on:smallButtonClick buttonText={modalButtonText} />
 	</div>
 </div>

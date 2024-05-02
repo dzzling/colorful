@@ -61,7 +61,7 @@
 		selectColor: number;
 		sendClue: { newClue: string };
 		screenClick: undefined;
-		logColor: undefined;
+		confirmColor: undefined;
 		resetGame: undefined;
 	};
 
@@ -89,8 +89,8 @@
 		dispatch('sendClue', { newClue });
 	}
 
-	function logColor() {
-		dispatch('logColor');
+	function confirmColor() {
+		dispatch('confirmColor');
 	}
 	function resetGame() {
 		newClue = '';
@@ -100,16 +100,16 @@
 	function getTurn() {
 		if (subscribedGameMode === 'single') {
 			return 1;
-		} else if (
+		}
+		if (
 			(subscribedPlayer === subscribedUserName && subscribedScreen === 3) ||
 			(subscribedPlayer != subscribedUserName &&
 				(subscribedScreen === 1 || subscribedScreen === 2)) ||
 			[-2, -1, 0, 4].includes(subscribedScreen)
 		) {
 			return 1;
-		} else {
-			return 0;
 		}
+		return 0;
 	}
 
 	function getTileVariantForColorIndex(colorIndex: number) {
@@ -151,7 +151,7 @@
 	<div
 		class="absolute top-0 left-0 w-full h-full p-6 sm:p-32 flex items-center justify-center bg-black/30"
 	>
-		<Modal on:smallButton={handleStartGame} modalButtonText={"Let's go"} />
+		<Modal on:smallButtonClick={handleStartGame} modalButtonText={"Let's go"} />
 	</div>
 {/if}
 
@@ -170,7 +170,7 @@
 		<div class="h-56 w-56 sm:h-96 sm:w-96 grid grid-rows-3 grid-cols-3 gap-2 sm:gap-4">
 			{#each subscribedColors as color, index}
 				<Tile
-					tileColor={color}
+					Color={color}
 					on:select={() => handleSelectColor(index)}
 					variant={getTileVariantForColorIndex(index)}
 				/>
@@ -178,7 +178,7 @@
 		</div>
 		<div class="w-full h-24 sm:h-32 flex flex-col justify-center items-center">
 			{#if subscribedScreen === 1 && (subscribedGameMode === 'single' || subscribedPlayer != subscribedUserName)}
-				<Button on:next={handleScreenClick} buttonText={'Show me the target'} />
+				<Button on:bigButtonClick={handleScreenClick} buttonText={'Show me the target'} />
 			{:else if (subscribedGameMode != 'single' && (subscribedScreen === 1 || subscribedScreen === 2) && subscribedUserName === subscribedPlayer) || (subscribedScreen === 3 && subscribedUserName != subscribedPlayer)}
 				<p class="text-lg">Wait</p>
 			{:else if subscribedScreen === 2 && (subscribedGameMode === 'single' || subscribedPlayer != subscribedUserName)}
@@ -189,17 +189,17 @@
 					placeholder="Enter clue"
 					bind:value={newClue}
 				/>
-				<Button on:next={sendClue} buttonText={'Send clue'} />
+				<Button on:bigButtonClick={sendClue} buttonText={'Send clue'} />
 			{:else if subscribedScreen === 3 && subscribedSelectedColorIndex === undefined && (subscribedGameMode === 'single' || subscribedPlayer == subscribedUserName)}
 				<p>Clue: {subscribedClue}</p>
 				<p class="text-lg mt-4">Please select a color</p>
 			{:else if subscribedScreen === 3 && subscribedSelectedColorIndex != undefined && (subscribedGameMode === 'single' || subscribedPlayer == subscribedUserName)}
-				<Button on:next={logColor} buttonText={'Log color in'} />
+				<Button on:bigButtonClick={confirmColor} buttonText={'Log color in'} />
 			{:else if subscribedScreen === 4}
 				{#if subscribedTargetColorIndex === subscribedSelectedColorIndex}
-					<Button on:next={resetGame} buttonText={'Correct. Another round!'} />
+					<Button on:bigButtonClick={resetGame} buttonText={'Correct. Another round!'} />
 				{:else}
-					<Button on:next={resetGame} buttonText={'Close enough. Another round!'} />
+					<Button on:bigButtonClick={resetGame} buttonText={'Close enough. Another round!'} />
 				{/if}
 			{/if}
 		</div>

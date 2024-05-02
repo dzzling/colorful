@@ -19,5 +19,5 @@
 		{/each}
 	</ol>
 
-	<Button on:next buttonText={'Start game'} />
+	<Button on:bigButtonClick buttonText={'Start game'} />
 </div>

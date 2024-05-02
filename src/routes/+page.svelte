@@ -21,8 +21,8 @@
 				<p class="text-pink-500 my-2 text-3xl">Hey there!</p>
 				<p class="text-lg">Do you want to play with a single device or multiple devices?</p>
 				<div class="flex flex-col sm:flex-row w-full gap-4 my-6 sm:my-12">
-					<Button on:smallButton={(e) => (gameMode = 'single')} buttonText={'Single'} />
-					<Button on:smallButton={(e) => (gameMode = 'multi')} buttonText={'Multiple'} />
+					<Button on:smallButtonClick={(e) => (gameMode = 'single')} buttonText={'Single'} />
+					<Button on:smallButtonClick={(e) => (gameMode = 'multi')} buttonText={'Multiple'} />
 				</div>
 			</div>
 		</div>

@@ -89,6 +89,6 @@
 	on:selectColor={(e) => selectColor(e.detail)}
 	on:screenClick={handleNextScreenButtonClick}
 	on:sendClue={(e) => sendClue(e.detail.newClue)}
-	on:logColor={handleNextScreenButtonClick}
+	on:confirmColor={handleNextScreenButtonClick}
 	on:resetGame={(n) => reset()}
 />

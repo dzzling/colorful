@@ -4,7 +4,7 @@
 	import { createEventDispatcher } from 'svelte';
 	export let variant: 'NORMAL' | 'TARGET' | 'SELECTED' | 'WON' | 'LOST_CORRECT' | 'LOST_INCORRECT' =
 		'NORMAL';
-	export let tileColor: undefined | Color = undefined;
+	export let Color: undefined | Color = undefined;
 	export let tileIndex: undefined | number = undefined;
 
 	const dispatch = createEventDispatcher();
@@ -20,7 +20,7 @@
 		(variant === 'TARGET' || variant === 'WON' || variant === 'LOST_INCORRECT') &&
 			'outline outline-4 outline-black'
 	)}
-	style="background-color: {tileColor};"
+	style="background-color: {Color};"
 	on:click={() => select()}
 >
 	{#if variant === 'TARGET'}

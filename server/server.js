@@ -107,10 +107,10 @@ io.on('connection', (socket) => {
         socket.to(room).emit('next screen');
     });
 
-    socket.on('log color', (logPackage) => {
+    socket.on('confirm color', (logPackage) => {
         const selectedColor = logPackage[0];
         const room = logPackage[1];
-        socket.to(room).emit('log color', selectedColor);
+        socket.to(room).emit('confirm color', selectedColor);
     });
 
     socket.on('resetGame', (receivedData) => {

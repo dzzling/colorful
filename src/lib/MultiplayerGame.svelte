@@ -99,11 +99,11 @@
 	});
 
 	// Log in color
-	function logColor() {
+	function confirmColor() {
 		handleNextScreenButtonClick();
-		socket.emit('log color', [subscribedSelectedColorIndex, roomName]);
+		socket.emit('confirm color', [subscribedSelectedColorIndex, roomName]);
 	}
-	socket.on('log color', (selectColor) => {
+	socket.on('confirm color', (selectColor) => {
 		selectedColorIndex.update((n) => selectColor);
 		handleNextScreenButtonClick();
 	});
@@ -169,7 +169,7 @@
 	<div
 		class="absolute top-0 left-0 w-full h-full p-6 sm:p-32 flex items-center justify-center bg-black/30 z-0"
 	>
-		<Waitingroom on:next={screenClick} roomUsers={users} room={roomName} />
+		<Waitingroom on:bigButtonClick={screenClick} roomUsers={users} room={roomName} />
 	</div>
 {/if}
 {#if subscribedScreen >= 0}
@@ -179,7 +179,7 @@
 		on:selectColor={(e) => selectColor(e.detail)}
 		on:screenClick={screenClick}
 		on:sendClue={(e) => sendClue(e.detail.newClue)}
-		on:logColor={logColor}
+		on:confirmColor={confirmColor}
 		on:resetGame={(e) => resetGame()}
 	/>
 {/if}

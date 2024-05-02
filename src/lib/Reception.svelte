@@ -28,7 +28,7 @@
 	</div>
 	<div class="w-full h-max flex flex-col items-center">
 		<br />
-		<Button on:next={createRoom} buttonText={'Create'} />
+		<Button on:bigButtonClick={createRoom} buttonText={'Create'} />
 		<p class="mb-1 mt-4">OR</p>
 		<form class="w-full flex flex-col items-center">
 			<input
@@ -38,7 +38,7 @@
 				id="joinRoom"
 				bind:value={roomName}
 			/>
-			<Button on:next={joinRoom} buttonText={'Join'} />
+			<Button on:bigButtonClick={joinRoom} buttonText={'Join'} />
 		</form>
 	</div>
 </div>
