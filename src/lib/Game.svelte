@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/BigButton.svelte';
+	import Button from '$lib/Button.svelte';
 	import Modal from '$lib/Modal.svelte';
 	import Tile from '$lib/Tile.svelte';
 	import DifficultySlider from '$lib/DifficultySlider.svelte';
@@ -151,7 +151,7 @@
 	<div
 		class="absolute top-0 left-0 w-full h-full p-6 sm:p-32 flex items-center justify-center bg-black/30"
 	>
-		<Modal on:smallButtonClick={handleStartGame} modalButtonText={"Let's go"} />
+		<Modal on:buttonClick={handleStartGame} modalButtonText={"Let's go"} />
 	</div>
 {/if}
 
@@ -178,7 +178,7 @@
 		</div>
 		<div class="w-full h-24 sm:h-32 flex flex-col justify-center items-center">
 			{#if subscribedScreen === 1 && (subscribedGameMode === 'single' || subscribedPlayer != subscribedUserName)}
-				<Button on:bigButtonClick={handleScreenClick} buttonText={'Show me the target'} />
+				<Button size={'big'} on:buttonClick={handleScreenClick} buttonText={'Show me the target'} />
 			{:else if (subscribedGameMode != 'single' && (subscribedScreen === 1 || subscribedScreen === 2) && subscribedUserName === subscribedPlayer) || (subscribedScreen === 3 && subscribedUserName != subscribedPlayer)}
 				<p class="text-lg">Wait</p>
 			{:else if subscribedScreen === 2 && (subscribedGameMode === 'single' || subscribedPlayer != subscribedUserName)}
@@ -189,17 +189,21 @@
 					placeholder="Enter clue"
 					bind:value={newClue}
 				/>
-				<Button on:bigButtonClick={sendClue} buttonText={'Send clue'} />
+				<Button size={'big'} on:buttonClick={sendClue} buttonText={'Send clue'} />
 			{:else if subscribedScreen === 3 && subscribedSelectedColorIndex === undefined && (subscribedGameMode === 'single' || subscribedPlayer == subscribedUserName)}
 				<p>Clue: {subscribedClue}</p>
 				<p class="text-lg mt-4">Please select a color</p>
 			{:else if subscribedScreen === 3 && subscribedSelectedColorIndex != undefined && (subscribedGameMode === 'single' || subscribedPlayer == subscribedUserName)}
-				<Button on:bigButtonClick={confirmColor} buttonText={'Log color in'} />
+				<Button size={'big'} on:buttonClick={confirmColor} buttonText={'Log color in'} />
 			{:else if subscribedScreen === 4}
 				{#if subscribedTargetColorIndex === subscribedSelectedColorIndex}
-					<Button on:bigButtonClick={resetGame} buttonText={'Correct. Another round!'} />
+					<Button size={'big'} on:buttonClick={resetGame} buttonText={'Correct. Another round!'} />
 				{:else}
-					<Button on:bigButtonClick={resetGame} buttonText={'Close enough. Another round!'} />
+					<Button
+						size={'big'}
+						on:buttonClick={resetGame}
+						buttonText={'Close enough. Another round!'}
+					/>
 				{/if}
 			{/if}
 		</div>

@@ -1,5 +1,5 @@
 <script>
-	import Button from '$lib/BigButton.svelte';
+	import Button from '$lib/Button.svelte';
 	export let room = '---ERROR---';
 	export let roomUsers = new Array();
 </script>
@@ -19,5 +19,5 @@
 		{/each}
 	</ol>
 
-	<Button on:bigButtonClick buttonText={'Start game'} />
+	<Button on:buttonClick size={'big'} buttonText={'Start game'} />
 </div>

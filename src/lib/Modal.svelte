@@ -1,5 +1,5 @@
 <script>
-	import Button from '$lib/SmallButton.svelte';
+	import Button from '$lib/Button.svelte';
 	export let modalButtonText = 'Click me';
 </script>
 
@@ -26,6 +26,6 @@
 			<li>Continue to the next round and keep the fun going!</li>
 		</ol>
 
-		<Button on:smallButtonClick buttonText={modalButtonText} />
+		<Button on:buttonClick size={'big'} buttonText={modalButtonText} />
 	</div>
 </div>

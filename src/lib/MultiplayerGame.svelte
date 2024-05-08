@@ -39,7 +39,7 @@
 	const socket = io('http://localhost:3000');
 
 	socket.on('connect_error', (err) => {
-		console.log(err);
+		alert('Oops. Something went wrong');
 	});
 
 	// Join Room
@@ -74,7 +74,7 @@
 		socket.emit('initialize', roomName);
 	}
 
-	// Listen for player movement from the server
+	// Listen for the initialization from the server
 	socket.on('initialize', (data) => {
 		console.log('got init package');
 		let received_data = JSON.parse(data);
@@ -85,11 +85,12 @@
 		handleNextScreenButtonClick();
 	});
 
+	// Update username property on assignment
 	socket.on('username', (username) => {
 		userName.update((n) => username);
 	});
 
-	// Screen click
+	// Initiate change to next screen
 	function screenClick() {
 		handleNextScreenButtonClick();
 		socket.emit('next screen', roomName);
@@ -98,7 +99,7 @@
 		handleNextScreenButtonClick();
 	});
 
-	// Log in color
+	// Emit the selected color to server
 	function confirmColor() {
 		handleNextScreenButtonClick();
 		socket.emit('confirm color', [subscribedSelectedColorIndex, roomName]);
@@ -108,6 +109,7 @@
 		handleNextScreenButtonClick();
 	});
 
+	// Reset game after last screen or difficulty change
 	function resetGame(newDifficulty: number = subscribedDifficulty, type: string = 'newround') {
 		socket.emit('resetGame', [newDifficulty, roomName, type]);
 	}
@@ -127,6 +129,7 @@
 		}
 	});
 
+	// Send or receive a clue for target color
 	function sendClue(newClue: string) {
 		socket.emit('send clue', newClue);
 	}
@@ -169,7 +172,7 @@
 	<div
 		class="absolute top-0 left-0 w-full h-full p-6 sm:p-32 flex items-center justify-center bg-black/30 z-0"
 	>
-		<Waitingroom on:bigButtonClick={screenClick} roomUsers={users} room={roomName} />
+		<Waitingroom on:buttonClick={screenClick} roomUsers={users} room={roomName} />
 	</div>
 {/if}
 {#if subscribedScreen >= 0}

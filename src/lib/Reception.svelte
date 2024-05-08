@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import Button from '$lib/BigButton.svelte';
+	import Button from '$lib/Button.svelte';
 
 	let roomName = '';
 
@@ -28,7 +28,7 @@
 	</div>
 	<div class="w-full h-max flex flex-col items-center">
 		<br />
-		<Button on:bigButtonClick={createRoom} buttonText={'Create'} />
+		<Button size={'big'} on:buttonClick={createRoom} buttonText={'Create'} />
 		<p class="mb-1 mt-4">OR</p>
 		<form class="w-full flex flex-col items-center">
 			<input
@@ -38,7 +38,7 @@
 				id="joinRoom"
 				bind:value={roomName}
 			/>
-			<Button on:bigButtonClick={joinRoom} buttonText={'Join'} />
+			<Button size={'big'} on:buttonClick={joinRoom} buttonText={'Join'} />
 		</form>
 	</div>
 </div>

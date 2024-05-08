@@ -11,20 +11,23 @@
 		selectedColorIndex,
 		clue,
 		gameMode
-	} from './../stores.js';
+	} from './../stores';
 
+	// Define store relevant variables
 	let firstColors: any = getRandomColors(1);
 	let subscribedDifficulty: number;
 	let subscribedScreen: number;
 	let subscribedColors: Array<Color>;
 
-	// Initialize
+	// Initialize variables
 	let buttonContent = "Let's go";
 	let newClue: string = '';
 	gameMode.update((n) => 'single');
 	difficulty.update((n) => 0);
 	screen.update((n) => 0);
 	colors.update((n) => firstColors);
+
+	// Subscribe to the store to get real time values
 	difficulty.subscribe((value) => {
 		subscribedDifficulty = value;
 	});
@@ -34,8 +37,11 @@
 	colors.subscribe((value) => {
 		subscribedColors = value;
 	});
+
+	// Update target color index
 	targetColorIndex.update((n) => getRandomInt(0, subscribedColors.length - 1));
 
+	// Reset after last screen or after difficulty change
 	function reset(newDifficulty: number = subscribedDifficulty) {
 		screen.update((n) => 1);
 		difficulty.update((n) => newDifficulty);
@@ -47,6 +53,7 @@
 		newClue = '';
 	}
 
+	// Move to next screen an update variables accordingly if needed
 	function handleNextScreenButtonClick() {
 		if (subscribedScreen === 0) {
 			screen.update((n) => 1);
@@ -68,11 +75,13 @@
 		}
 	}
 
+	// Update clue to be shown on next screen
 	function sendClue(sentClue: string) {
 		clue.update((n) => sentClue);
 		handleNextScreenButtonClick();
 	}
 
+	// Confirm the selected color
 	function selectColor(index: number) {
 		selectedColorIndex.update((n) => index);
 	}
