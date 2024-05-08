@@ -14,7 +14,7 @@
 		player,
 		clue,
 		gameMode
-	} from './../stores.js';
+	} from '../stores';
 
 	let subscribedDifficulty: number;
 	let subscribedScreen: number;

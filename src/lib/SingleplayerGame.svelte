@@ -11,10 +11,10 @@
 		selectedColorIndex,
 		clue,
 		gameMode
-	} from './../stores';
+	} from '../stores';
 
 	// Define store relevant variables
-	let firstColors: any = getRandomColors(1);
+	let firstColors = getRandomColors(1);
 	let subscribedDifficulty: number;
 	let subscribedScreen: number;
 	let subscribedColors: Array<Color>;
