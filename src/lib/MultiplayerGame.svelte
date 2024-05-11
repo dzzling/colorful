@@ -153,7 +153,6 @@
 		} else {
 			screen.update((n) => n + 1);
 		}
-		console.log(screen);
 	}
 
 	function selectColor(index: number) {
@@ -180,7 +179,7 @@
 		on:start={startGame}
 		on:difficultyChange={(e) => resetGame(e.detail, 'changedifficulty')}
 		on:selectColor={(e) => selectColor(e.detail)}
-		on:screenClick={screenClick}
+		on:getTargetScreen={screenClick}
 		on:sendClue={(e) => sendClue(e.detail.newClue)}
 		on:confirmColor={confirmColor}
 		on:resetGame={(e) => resetGame()}

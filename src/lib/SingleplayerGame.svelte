@@ -20,7 +20,6 @@
 	let subscribedColors: Array<Color>;
 
 	// Initialize variables
-	let buttonContent = "Let's go";
 	let newClue: string = '';
 	gameMode.update((n) => 'single');
 	difficulty.update((n) => 0);
@@ -49,36 +48,27 @@
 		colors.update((n) => newColors);
 		targetColorIndex.update((n) => getRandomInt(0, subscribedColors.length - 1));
 		selectedColorIndex.update((n) => undefined);
-		buttonContent = 'Show me the target';
 		newClue = '';
 	}
 
 	// Move to next screen an update variables accordingly if needed
-	function handleNextScreenButtonClick() {
-		if (subscribedScreen === 0) {
-			screen.update((n) => 1);
-			buttonContent = 'Show me the target';
-		} else if (subscribedScreen === 1) {
-			screen.update((n) => 2);
-			buttonContent = 'Log clue';
-		} else if (subscribedScreen === 2) {
-			screen.update((n) => 3);
-		} else if (subscribedScreen === 3) {
-			screen.update((n) => 4);
-			if (targetColorIndex === selectedColorIndex) {
-				buttonContent = 'Correct. Another round!';
-			} else {
-				buttonContent = 'Close enough. Another round!';
-			}
-		} else if (subscribedScreen === 4) {
-			reset();
-		}
+
+	function getStartScreen() {
+		screen.update((n) => 1);
+	}
+
+	function getTargetScreen() {
+		screen.update((n) => 2);
+	}
+
+	function getRevealScreen() {
+		screen.update((n) => 4);
 	}
 
 	// Update clue to be shown on next screen
 	function sendClue(sentClue: string) {
 		clue.update((n) => sentClue);
-		handleNextScreenButtonClick();
+		screen.update((n) => 3);
 	}
 
 	// Confirm the selected color
@@ -93,11 +83,11 @@
 	<p>Please turn your screen</p>
 </div>
 <Game
-	on:start={handleNextScreenButtonClick}
+	on:start={getStartScreen}
 	on:difficultyChange={(e) => reset(e.detail)}
 	on:selectColor={(e) => selectColor(e.detail)}
-	on:screenClick={handleNextScreenButtonClick}
+	on:getTargetScreen={getTargetScreen}
 	on:sendClue={(e) => sendClue(e.detail.newClue)}
-	on:confirmColor={handleNextScreenButtonClick}
+	on:confirmColor={getRevealScreen}
 	on:resetGame={(n) => reset()}
 />

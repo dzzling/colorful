@@ -60,7 +60,7 @@
 		difficultyChange: number;
 		selectColor: number;
 		sendClue: { newClue: string };
-		screenClick: undefined;
+		getTargetScreen: undefined;
 		confirmColor: undefined;
 		resetGame: undefined;
 	};
@@ -81,8 +81,8 @@
 		dispatch('selectColor', index);
 	}
 
-	function handleScreenClick() {
-		dispatch('screenClick');
+	function handleTargetScreen() {
+		dispatch('getTargetScreen');
 	}
 
 	function sendClue() {
@@ -178,7 +178,11 @@
 		</div>
 		<div class="w-full h-24 sm:h-32 flex flex-col justify-center items-center">
 			{#if subscribedScreen === 1 && (subscribedGameMode === 'single' || subscribedPlayer != subscribedUserName)}
-				<Button size={'big'} on:buttonClick={handleScreenClick} buttonText={'Show me the target'} />
+				<Button
+					size={'big'}
+					on:buttonClick={handleTargetScreen}
+					buttonText={'Show me the target'}
+				/>
 			{:else if (subscribedGameMode != 'single' && (subscribedScreen === 1 || subscribedScreen === 2) && subscribedUserName === subscribedPlayer) || (subscribedScreen === 3 && subscribedUserName != subscribedPlayer)}
 				<p class="text-lg">Wait</p>
 			{:else if subscribedScreen === 2 && (subscribedGameMode === 'single' || subscribedPlayer != subscribedUserName)}
