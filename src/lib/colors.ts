@@ -1,10 +1,10 @@
 import chroma from 'chroma-js';
-import { getRandomFloat, getRandomInt } from './random.js';
+import { getRandomFloat, getRandomInt } from './random';
 
 /**
  * @param difficulty Should be a number between 1 and 100
  */
-export function getRandomColors(difficulty) {
+export function getRandomColors(difficulty: number) {
 	const hslHueOffset = 115 - difficulty;
 
 	const firstColorHsl = [

@@ -1,11 +1,11 @@
 
-function getRandomArbitrary(min, max) {
+function getRandomArbitrary(min: number, max: number) {
     return Math.random() * (max - min) + min;
 }
 
 export function generateUsername() {
-    const adj = adjectives[parseInt(getRandomArbitrary(0, adjectives.length - 1))];
-    const nou = nouns[parseInt(getRandomArbitrary(0, nouns.length - 1))];
+    const adj: String = adjectives[Math.round(getRandomArbitrary(0, adjectives.length - 1))];
+    const nou: String = nouns[Math.round(getRandomArbitrary(0, nouns.length - 1))];
     const nouCap = nou.charAt(0).toUpperCase() + nou.slice(1)
 
     return (adj + nouCap).toString()
@@ -2130,6 +2130,3 @@ const adjectives = [
     'zippy',
     'zonked'
 ];
-
-
-console.log(generateUsername());

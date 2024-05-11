@@ -3,11 +3,10 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-import { v4 as uuidv4 } from 'uuid';
-import { getRandomColors } from '../src/lib/colors.js';
-import { getRandomInt } from '../src/lib/random.js';
-import { generateUsername } from '../src/lib/generateNames.js';
-import { generateRoom } from '../src/lib/generateRoomNames.js';
+import { getRandomColors } from '../src/lib/colors';
+import { getRandomInt } from '../src/lib/random';
+import { generateUsername } from '../src/lib/generateNames';
+import { generateRoom } from '../src/lib/generateRoomNames';
 
 // Create an Express app
 const app = express();
@@ -48,11 +47,11 @@ io.on('connection', (socket) => {
         socket.join(`${room}`);
 
         const rooms = io.of("/").adapter.rooms;
-        const socketsInRoom = rooms.get(room);
+        const socketsInRoom: Set<string> | undefined = rooms.get(room);
 
-        const roomUsers = []
-        socketsInRoom.forEach((_, socketId) => {
-            const userId = userMap.get(socketId);
+        const roomUsers: Array<Number> = []
+        socketsInRoom!.forEach((_, socketId) => {
+            const userId: number = userMap.get(socketId);
             roomUsers.push(userId);
         });
 
@@ -92,10 +91,10 @@ io.on('connection', (socket) => {
         io.in(room).emit('initialize', initPackage);
 
         const rooms = io.of("/").adapter.rooms;
-        const socketsInRoom = rooms.get(room);
+        const socketsInRoom: Set<string> | undefined = rooms.get(room);
 
         // Log information about each socket in the room
-        socketsInRoom.forEach((_, socketId) => {
+        socketsInRoom!.forEach((_, socketId) => {
             const socket = io.sockets.sockets.get(socketId);
             const userId = userMap.get(socketId);
             io.to(socketId).emit('username', userId)
@@ -123,9 +122,9 @@ io.on('connection', (socket) => {
     })
 
     socket.on('send clue', (clue) => {
-        let room = io.of("/").adapter.sids.get(socket.id);
-        console.log([...room].pop());
-        io.in([...room].pop()).emit('receive clue', clue);
+        let rooms = io.of("/").adapter.sids.get(socket.id)!;
+        let room = [...rooms].pop()!
+        io.in(room).emit('receive clue', clue);
     });
 
     socket.on('disconnect', (room) => {

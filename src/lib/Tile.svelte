@@ -7,7 +7,10 @@
 	export let Color: undefined | Color = undefined;
 	export let tileIndex: undefined | number = undefined;
 
-	const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher<{
+		select: undefined;
+	}>();
+
 	function select() {
 		dispatch('select');
 	}

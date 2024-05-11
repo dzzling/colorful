@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
 	import Button from '$lib/Button.svelte';
 	export let room = '---ERROR---';
-	export let roomUsers = new Array();
+	export let roomUsers: Array<String> = new Array();
 </script>
 
 <div

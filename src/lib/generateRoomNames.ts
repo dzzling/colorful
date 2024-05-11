@@ -1,5 +1,5 @@
 
-export function generateRoom(adjIndex, nounIndex) {
+export function generateRoom(adjIndex: number, nounIndex: number) {
     const adj = adjectives[adjIndex];
     const nou = nouns[nounIndex];
     const adjLow = adj.charAt(0).toLowerCase() + adj.slice(1);

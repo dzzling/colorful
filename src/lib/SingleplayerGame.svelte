@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getRandomColors } from '$lib/colors';
-	import { getRandomInt } from '$lib/random';
+	import { getRandomColors } from './colors';
+	import { getRandomInt } from './random';
 	import Game from './Game.svelte';
 	import type { Color } from 'chroma-js';
 	import {
