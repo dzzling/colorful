@@ -3,7 +3,7 @@
 	import SingleplayerGame from '$lib/SingleplayerGame.svelte';
 	import Button from '$lib/Button.svelte';
 
-	let gameMode: undefined | string = undefined;
+	let gameMode: undefined | 'multi' | 'single' = undefined;
 </script>
 
 <div class="absolute left-10 top-10 z-10 text-stone-400 sm:text-white">
