@@ -23,7 +23,7 @@ npm run dev -- --open
 To start the server, run:
 
 ```bash
-node server/server.js
+node server
 ```
 
 ## Building
