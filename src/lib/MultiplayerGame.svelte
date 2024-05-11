@@ -57,7 +57,6 @@
 	});
 
 	function createRoom() {
-		console.log('Asking to create room');
 		socket.emit('create room');
 	}
 	socket.on('create room', (room) => {
@@ -76,7 +75,6 @@
 
 	// Listen for the initialization from the server
 	socket.on('initialize', (data) => {
-		console.log('got init package');
 		let received_data = JSON.parse(data);
 		targetColorIndex.update((n) => received_data[0]);
 		colors.update((n) => received_data[1]);
@@ -115,7 +113,6 @@
 	}
 
 	socket.on('reset game', (resetPackage) => {
-		console.log('Reset');
 		let receivedData = JSON.parse(resetPackage);
 		targetColorIndex.update((n) => receivedData[0]);
 		colors.update((n) => receivedData[1]);
