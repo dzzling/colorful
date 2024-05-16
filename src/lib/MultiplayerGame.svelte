@@ -36,7 +36,7 @@
 	});
 
 	// Connect to the server
-	const socket = io('http://localhost:3000');
+	const socket = io('http://localhost:8080');
 
 	socket.on('connect_error', (err) => {
 		alert('Oops. Something went wrong');
