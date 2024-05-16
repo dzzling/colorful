@@ -1,16 +1,24 @@
-FROM node:22
+FROM node:22 AS build
 
-WORKDIR /project
+WORKDIR /app
 
-COPY package.json /project/
-COPY package-lock.json /project/
-COPY node_modules /project/node_modules
-COPY package.json /project/
+COPY package.json ./
+COPY package-lock.json ./
+
 RUN npm install
+COPY . ./
 
-COPY server /project/server/
-COPY src /project/src/
+RUN npm run server:build
+RUN npm prune --production
+
+FROM node:22-alpine
+
+WORKDIR /app
+
+COPY --from=build /app/node_modules/ ./node_modules/
+COPY --from=build /app/dist/ .
+COPY package.json .
 
 EXPOSE 8080
 
-CMD ["node", "/project/node_modules/.bin/tsx", "/project/server/server.ts"]
+CMD ["node", "./server/server.js"]

@@ -1,5 +1,5 @@
 import chroma from 'chroma-js';
-import { getRandomFloat, getRandomInt } from './random';
+import { getRandomFloat, getRandomInt } from './random.js';
 
 /**
  * @param difficulty Should be a number between 1 and 100

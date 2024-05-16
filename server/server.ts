@@ -1,12 +1,12 @@
 // Import required modules
 import express from 'express';
-import http from 'http';
+import http from 'http'
 import { Server } from 'socket.io';
 import cors from 'cors';
-import { getRandomColors } from '../src/lib/colors';
-import { getRandomInt } from '../src/lib/random';
-import { generateUsername } from '../src/lib/generateNames';
-import { generateRoom } from '../src/lib/generateRoomNames';
+import { getRandomColors } from '../src/lib/colors.js';
+import { getRandomInt } from '../src/lib/random.js';
+import { generateUsername } from '../src/lib/generateNames.js';
+import { generateRoom } from '../src/lib/generateRoomNames.js';
 
 // Create an Express app
 const app = express();

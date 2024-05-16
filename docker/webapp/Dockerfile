@@ -7,9 +7,11 @@ COPY package-lock.json ./
 
 RUN npm install
 COPY . ./
-RUN npm run build
 
-FROM node:22
+RUN npm run build
+RUN npm prune --production
+
+FROM node:22-alpine
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/build ./build
 COPY package.json ./build
