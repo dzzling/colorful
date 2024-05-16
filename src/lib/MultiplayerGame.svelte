@@ -3,6 +3,7 @@
 	import { io } from 'socket.io-client';
 	import Waitingroom from '$lib/Waitingroom.svelte';
 	import Reception from '$lib/Reception.svelte';
+	import { env } from '$env/dynamic/public';
 	import Game from './Game.svelte';
 	import {
 		difficulty,
@@ -36,7 +37,7 @@
 	});
 
 	// Connect to the server
-	const socket = io('http://localhost:8080');
+	const socket = io(env.PUBLIC_SOCKET_SERVER_ADDRESS!);
 
 	socket.on('connect_error', (err) => {
 		alert('Oops. Something went wrong');
