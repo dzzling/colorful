@@ -78,7 +78,9 @@
 	}
 
 	function handleSelectColor(index: number) {
-		dispatch('selectColor', index);
+		if (subscribedScreen != 4) {
+			dispatch('selectColor', index);
+		}
 	}
 
 	function handleTargetScreen() {
